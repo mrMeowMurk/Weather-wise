@@ -1,4 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 body {
+  @apply bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen text-gray-900;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -10,4 +20,55 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.glass-card {
+  @apply backdrop-blur-md bg-white/30 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.weather-card {
+  @apply glass-card p-6;
+}
+
+.weather-icon {
+  @apply w-16 h-16 text-accent drop-shadow-lg transform transition-transform hover:scale-110;
+}
+
+.search-input {
+  @apply bg-white/50 backdrop-blur-sm border-0 focus:ring-2 focus:ring-accent/50;
+}
+
+.button-primary {
+  @apply bg-gradient-to-r from-accent to-blue-600 text-white font-medium px-6 py-2 rounded-lg
+         hover:from-blue-600 hover:to-accent transition-all duration-300 shadow-md hover:shadow-lg
+         disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.stat-card {
+  @apply glass-card p-4 flex items-center gap-3 text-sm;
+}
+
+.stat-icon {
+  @apply w-8 h-8 text-accent/80;
+}
+
+.daily-forecast {
+  @apply grid grid-cols-1 md:grid-cols-5 gap-4 mt-6;
+}
+
+.daily-forecast > div {
+  animation: fadeIn 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+.daily-forecast > div:nth-child(1) { animation-delay: 0.1s; }
+.daily-forecast > div:nth-child(2) { animation-delay: 0.2s; }
+.daily-forecast > div:nth-child(3) { animation-delay: 0.3s; }
+.daily-forecast > div:nth-child(4) { animation-delay: 0.4s; }
+.daily-forecast > div:nth-child(5) { animation-delay: 0.5s; }
+
+.chart-container {
+  @apply glass-card p-4 mt-6;
+  height: 300px;
 }

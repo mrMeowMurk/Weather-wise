@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import WeatherCard from './components/WeatherCard';
-import WeatherStats from './components/WeatherStats';
-import TemperatureChart from './components/TemperatureChart';
-import AirQualityIndicator from './components/AirQualityIndicator';
-import Welcome from './components/Welcome';
+import WeatherCard from './components/WeatherCard/WeatherCard';
+import WeatherStats from './components/WeatherStats/WeatherStats';
+import TemperatureChart from './components/TemperatureChart/TemperatureChart';
+import AirQualityIndicator from './components/AirQualityIndicator/AirQualityIndicator';
+import Welcome from './components/Welcome/Welcome';
 import { MdSearch, MdMyLocation, MdNotifications } from 'react-icons/md';
 import { 
   WiDaySunny,

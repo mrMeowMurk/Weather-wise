@@ -4,6 +4,7 @@ import WeatherCard from './components/WeatherCard';
 import WeatherStats from './components/WeatherStats';
 import TemperatureChart from './components/TemperatureChart';
 import AirQualityIndicator from './components/AirQualityIndicator';
+import Welcome from './components/Welcome';
 import { MdSearch, MdMyLocation, MdNotifications } from 'react-icons/md';
 import { 
   WiDaySunny,
@@ -274,6 +275,8 @@ function App() {
         </button>
       </header>
 
+      {weather && <Welcome weather={weather} />}
+
       {showNotifications && notifications.length > 0 && (
         <div className="notifications-panel animate-fade-in mb-6">
           {notifications.map((notification, index) => (
@@ -348,7 +351,7 @@ function App() {
           {error}
         </div>
       )}
-
+      
       {weather && (
         <div className="weather-content animate-fade-in">
           <WeatherCard data={weather} />

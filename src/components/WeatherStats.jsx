@@ -51,22 +51,22 @@ const WeatherStats = ({ data }) => {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
       {/* Ветер */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-5">
+      <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-5">
         <div className="flex items-center gap-2 mb-4">
           <WiStrongWind className="text-blue-500 text-2xl" />
-          <span className="text-gray-700">Ветер</span>
+          <span className="text-white-700">Ветер</span>
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex items-baseline">
             <span className="text-3xl font-medium">{Math.round(data.wind_speed)}</span>
-            <span className="text-gray-500 ml-1">м/с</span>
+            <span className="text-white-500 ml-1">м/с</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-500">
+          <div className="flex items-center gap-2 text-sm text-white-500">
             <TbCompass />
             <span>Направление: {data.wind_direction}° ({getWindDirection(data.wind_direction)})</span>
           </div>
           {data.wind_gust && (
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center gap-2 text-sm text-white-500">
               <WiWindDeg />
               <span>Порывы до {Math.round(data.wind_gust)} м/с</span>
             </div>
@@ -75,13 +75,13 @@ const WeatherStats = ({ data }) => {
       </div>
 
       {/* Влажность */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-5">
+      <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-5">
         <div className="flex items-center gap-2 mb-4">
           <WiHumidity className="text-teal-500 text-2xl" />
-          <span className="text-gray-700">Влажность</span>
+          <span className="text-white-700">Влажность</span>
           <span className="ml-auto text-3xl font-medium">{data.humidity}%</span>
         </div>
-        <div className="flex flex-col gap-2 text-sm text-gray-500">
+        <div className="flex flex-col gap-2 text-sm text-white-500">
           <div className="flex items-center gap-2">
             <WiThermometer />
             <span>Ощущается как {Math.round(data.apparent_temperature)}°</span>
@@ -97,13 +97,13 @@ const WeatherStats = ({ data }) => {
       </div>
 
       {/* Давление */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-5">
+      <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-5">
         <div className="flex items-center gap-2 mb-4">
           <WiBarometer className="text-purple-500 text-2xl" />
-          <span className="text-gray-700">Давление</span>
+          <span className="text-white-700">Давление</span>
           <span className="ml-auto text-3xl font-medium">{Math.round(data.pressure)}</span>
         </div>
-        <div className="flex flex-col gap-2 text-sm text-gray-500">
+        <div className="flex flex-col gap-2 text-sm text-white-500">
           <div>
             {Math.round(data.pressure * 0.75006375541921)} мм рт.ст.
           </div>
@@ -122,13 +122,13 @@ const WeatherStats = ({ data }) => {
       </div>
 
       {/* Дополнительные метрики */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-5">
+      <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-5">
         <div className="flex items-center gap-2 mb-4">
           <TbUvIndex className="text-yellow-500 text-2xl" />
-          <span className="text-gray-700">УФ индекс</span>
+          <span className="text-white-700">УФ индекс</span>
           <span className="ml-auto text-3xl font-medium">{Math.round(data.uv_index || 0)}</span>
         </div>
-        <div className="flex flex-col gap-2 text-sm text-gray-500">
+        <div className="flex flex-col gap-2 text-sm text-white-500">
           <div className="flex items-center gap-2">
             <MdVisibility />
             <span>Видимость: {Math.round((data.visibility || 0) / 1000)} км</span>
@@ -141,12 +141,12 @@ const WeatherStats = ({ data }) => {
       </div>
 
       {/* Осадки */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-5">
+      <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-5">
         <div className="flex items-center gap-2 mb-4">
           <WiUmbrella className="text-blue-500 text-2xl" />
-          <span className="text-gray-700">Осадки</span>
+          <span className="text-white-700">Осадки</span>
         </div>
-        <div className="flex flex-col gap-2 text-sm text-gray-500">
+        <div className="flex flex-col gap-2 text-sm text-white-500">
           <div>
             За последний час: {data.precipitation_1h || 0} мм
           </div>
@@ -160,23 +160,23 @@ const WeatherStats = ({ data }) => {
       </div>
 
       {/* Восход и закат */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-5 col-span-2 lg:col-span-1">
+      <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-5 col-span-2 lg:col-span-1">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <WiSunrise className="text-amber-500 text-3xl" />
             <div>
               <div className="text-2xl font-medium">{formatTime(data.sunrise)}</div>
-              <div className="text-sm text-gray-500">{formatDate(data.sunrise)}</div>
+              <div className="text-sm text-white-500">{formatDate(data.sunrise)}</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <WiSunset className="text-orange-500 text-3xl" />
             <div>
               <div className="text-2xl font-medium">{formatTime(data.sunset)}</div>
-              <div className="text-sm text-gray-500">{formatDate(data.sunset)}</div>
+              <div className="text-sm text-white-500">{formatDate(data.sunset)}</div>
             </div>
           </div>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-white-500">
             Продолжительность дня: {Math.round((data.sunset - data.sunrise) / 3600)} ч
           </div>
         </div>

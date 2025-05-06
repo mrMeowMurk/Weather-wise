@@ -33,7 +33,7 @@ const AirQualityIndicator = ({ pressure, humidity }) => {
   const qualityInfo = getQualityInfo(airQualityIndex);
 
   return (
-    <div className="relative overflow-hidden backdrop-blur-md bg-gradient-to-br from-white/90 to-white/70 rounded-2xl p-6">
+    <div className="relative overflow-hidden backdrop-blur-md bg-gradient-to-br from-[#8085d7] to-white/50 rounded-2xl p-6">
       {/* Декоративные элементы */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-cyan-300/20 rounded-full blur-2xl transform translate-x-16 -translate-y-8"></div>
       <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-purple-400/20 to-pink-300/20 rounded-full blur-2xl transform -translate-x-16 translate-y-8"></div>
@@ -42,7 +42,7 @@ const AirQualityIndicator = ({ pressure, humidity }) => {
         {/* Заголовок */}
         <div className="flex items-center space-x-3 mb-6">
           <MdAir className="text-3xl text-blue-500" />
-          <h3 className="text-2xl font-bold text-gray-800">Качество воздуха</h3>
+          <h3 className="text-2xl font-bold text-white-800">Качество воздуха</h3>
         </div>
 
         {/* Основной индикатор */}
@@ -72,15 +72,15 @@ const AirQualityIndicator = ({ pressure, humidity }) => {
             </svg>
             {/* Центральное значение */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-4xl font-bold text-gray-800">{airQualityIndex}</span>
-              <span className="text-sm text-gray-500">из 100</span>
+              <span className="text-4xl font-bold text-white-800">{airQualityIndex}</span>
+              <span className="text-sm text-white-500">из 100</span>
             </div>
           </div>
 
           {/* Текстовая информация */}
           <div className="flex-1 ml-8">
             <div className="mb-4">
-              <p className="text-lg text-gray-600">Состояние</p>
+              <p className="text-lg text-white-600">Состояние</p>
               <p className="text-2xl font-bold" style={{ color: qualityInfo.color }}>
                 {qualityInfo.text}
               </p>
@@ -90,24 +90,24 @@ const AirQualityIndicator = ({ pressure, humidity }) => {
 
         {/* Метрики */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white/50 rounded-xl p-4 backdrop-blur-sm transition-all hover:bg-white/60">
+          <div className="bg-white/20 rounded-xl p-4 backdrop-blur-sm transition-all hover:bg-white/60">
             <div className="flex items-center space-x-3 mb-2">
               <WiBarometer className="text-2xl text-indigo-500" />
-              <span className="text-gray-600">Давление</span>
+              <span className="text-white-600">Давление</span>
             </div>
-            <p className="text-xl font-semibold text-gray-800">{Math.round(pressure)} гПа</p>
-            <p className="text-sm text-gray-500">
+            <p className="text-xl font-semibold text-white-800">{Math.round(pressure)} гПа</p>
+            <p className="text-sm text-white-500">
               {Math.round(pressure * 0.75006375541921)} мм рт.ст.
             </p>
           </div>
 
-          <div className="bg-white/50 rounded-xl p-4 backdrop-blur-sm transition-all hover:bg-white/60">
+          <div className="bg-white/20 rounded-xl p-4 backdrop-blur-sm transition-all hover:bg-white/60">
             <div className="flex items-center space-x-3 mb-2">
               <WiHumidity className="text-2xl text-teal-500" />
-              <span className="text-gray-600">Влажность</span>
+              <span className="text-white-600">Влажность</span>
             </div>
-            <p className="text-xl font-semibold text-gray-800">{humidity}%</p>
-            <p className="text-sm text-gray-500">
+            <p className="text-xl font-semibold text-white-800">{humidity}%</p>
+            <p className="text-sm text-white-500">
               {humidity < 40 ? 'Низкая' : humidity > 60 ? 'Высокая' : 'Оптимальная'}
             </p>
           </div>

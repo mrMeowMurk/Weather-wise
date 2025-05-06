@@ -2,7 +2,23 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import WeatherCard from './components/WeatherCard';
 import WeatherStats from './components/WeatherStats';
-import { MdSearch, MdMyLocation } from 'react-icons/md';
+import TemperatureChart from './components/TemperatureChart';
+import AirQualityIndicator from './components/AirQualityIndicator';
+import { MdSearch, MdMyLocation, MdNotifications } from 'react-icons/md';
+import { 
+  WiDaySunny,
+  WiNightClear,
+  WiDayCloudy,
+  WiNightCloudy,
+  WiCloud,
+  WiCloudy,
+  WiRain,
+  WiDayRain,
+  WiNightRain,
+  WiThunderstorm,
+  WiSnow,
+  WiFog
+} from 'react-icons/wi';
 import './App.css';
 
 const GEOCODING_URL = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -18,6 +34,8 @@ function App() {
     const saved = localStorage.getItem('recentSearches');
     return saved ? JSON.parse(saved) : [];
   });
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   const fetchWeather = async (lat, lon, cityName) => {
     try {
@@ -74,6 +92,8 @@ function App() {
             'weather_code',
             'wind_speed_10m_max',
             'relative_humidity_2m_max',
+            'precipitation_probability_max',
+            'precipitation_sum',
             'sunrise',
             'sunset'
           ],
@@ -93,21 +113,23 @@ function App() {
           description: getWeatherDescription(weatherResponse.data.current.weather_code)
         }],
         dt: new Date().getTime() / 1000,
-        sunrise: weatherResponse.data.daily.sunrise[0],
-        sunset: weatherResponse.data.daily.sunset[0]
+        sunrise: new Date(weatherResponse.data.daily.sunrise[0]).getTime(),
+        sunset: new Date(weatherResponse.data.daily.sunset[0]).getTime()
       };
 
-      const dailyForecast = weatherResponse.data.daily.time.slice(1).map((time, index) => ({
-        temp: weatherResponse.data.daily.temperature_2m_max[index + 1],
-        temp_min: weatherResponse.data.daily.temperature_2m_min[index + 1],
-        humidity: weatherResponse.data.daily.relative_humidity_2m_max[index + 1],
-        wind_speed: weatherResponse.data.daily.wind_speed_10m_max[index + 1],
+      const dailyForecast = weatherResponse.data.daily.time.map((time, index) => ({
+        temp: weatherResponse.data.daily.temperature_2m_max[index],
+        temp_min: weatherResponse.data.daily.temperature_2m_min[index],
+        humidity: weatherResponse.data.daily.relative_humidity_2m_max[index],
+        wind_speed: weatherResponse.data.daily.wind_speed_10m_max[index],
+        pop: weatherResponse.data.daily.precipitation_probability_max[index] / 100,
+        rain: weatherResponse.data.daily.precipitation_sum[index],
         weather: [{
-          id: weatherResponse.data.daily.weather_code[index + 1],
-          description: getWeatherDescription(weatherResponse.data.daily.weather_code[index + 1])
+          id: weatherResponse.data.daily.weather_code[index],
+          description: getWeatherDescription(weatherResponse.data.daily.weather_code[index])
         }],
         dt: new Date(time).getTime() / 1000
-      }));
+      })).slice(1, 6); // Берем следующие 5 дней, исключая текущий
 
       setWeather(currentWeather);
       setForecast(dailyForecast);
@@ -148,9 +170,43 @@ function App() {
     return descriptions[code] || 'Неизвестно';
   };
 
+  // Функция для проверки экстремальных погодных условий
+  const checkWeatherConditions = (weatherData) => {
+    const newNotifications = [];
+    
+    if (weatherData.temp >= 30) {
+      newNotifications.push({
+        type: 'warning',
+        message: 'Высокая температура! Не забудьте про головной убор и воду.'
+      });
+    }
+    
+    if (weatherData.temp <= 0) {
+      newNotifications.push({
+        type: 'warning',
+        message: 'Температура ниже нуля! Оденьтесь теплее.'
+      });
+    }
+    
+    if (weatherData.wind_speed >= 15) {
+      newNotifications.push({
+        type: 'warning',
+        message: 'Сильный ветер! Будьте осторожны на улице.'
+      });
+    }
+
+    setNotifications(newNotifications);
+  };
+
   useEffect(() => {
     fetchWeather();
   }, []);
+
+  useEffect(() => {
+    if (weather) {
+      checkWeatherConditions(weather);
+    }
+  }, [weather]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -172,89 +228,208 @@ function App() {
     }
   };
 
+  const getWeatherIcon = (code) => {
+    const icons = {
+      0: <WiDaySunny className="forecast-weather-icon" />,
+      1: <WiDayCloudy className="forecast-weather-icon" />,
+      2: <WiCloud className="forecast-weather-icon" />,
+      3: <WiCloudy className="forecast-weather-icon" />,
+      45: <WiFog className="forecast-weather-icon" />,
+      48: <WiFog className="forecast-weather-icon" />,
+      51: <WiDayRain className="forecast-weather-icon" />,
+      53: <WiDayRain className="forecast-weather-icon" />,
+      55: <WiRain className="forecast-weather-icon" />,
+      61: <WiDayRain className="forecast-weather-icon" />,
+      63: <WiRain className="forecast-weather-icon" />,
+      65: <WiRain className="forecast-weather-icon" />,
+      71: <WiSnow className="forecast-weather-icon" />,
+      73: <WiSnow className="forecast-weather-icon" />,
+      75: <WiSnow className="forecast-weather-icon" />,
+      77: <WiSnow className="forecast-weather-icon" />,
+      80: <WiRain className="forecast-weather-icon" />,
+      81: <WiRain className="forecast-weather-icon" />,
+      82: <WiRain className="forecast-weather-icon" />,
+      85: <WiSnow className="forecast-weather-icon" />,
+      86: <WiSnow className="forecast-weather-icon" />,
+      95: <WiThunderstorm className="forecast-weather-icon" />,
+      96: <WiThunderstorm className="forecast-weather-icon" />,
+      99: <WiThunderstorm className="forecast-weather-icon" />
+    };
+    return icons[code] || <WiDaySunny className="forecast-weather-icon" />;
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-8 text-primary">
-          WeatherWise
-        </h1>
-
-        <div className="glass-card p-6 mb-8">
-          <form onSubmit={handleSubmit} className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <input
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="search-input w-full px-4 py-2 rounded-lg"
-                placeholder="Введите название города..."
-                list="recent-searches"
-              />
-              <MdSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
-              <datalist id="recent-searches">
-                {recentSearches.map((city) => (
-                  <option key={city} value={city} />
-                ))}
-              </datalist>
-            </div>
-            <button
-              type="button"
-              onClick={getCurrentLocation}
-              className="button-primary !px-3"
-              title="Определить местоположение"
-            >
-              <MdMyLocation className="w-6 h-6" />
-            </button>
-            <button
-              type="submit"
-              className="button-primary"
-              disabled={loading}
-            >
-              {loading ? 'Загрузка...' : 'Поиск'}
-            </button>
-          </form>
-
-          {recentSearches.length > 0 && (
-            <div className="mt-4 text-sm text-gray-600">
-              Недавние поиски:
-              {recentSearches.map((city, index) => (
-                <button
-                  key={city}
-                  onClick={() => {
-                    setCity(city);
-                    fetchWeather(null, null, city);
-                  }}
-                  className="ml-2 px-2 py-1 rounded-md hover:bg-white/30 transition-colors"
-                >
-                  {city}
-                </button>
-              ))}
-            </div>
+    <div className="weather-container">
+      <header className="header">
+        <h1 className="logo">WeatherWise</h1>
+        <button
+          className="notification-button"
+          onClick={() => setShowNotifications(!showNotifications)}
+          title="Уведомления о погоде"
+        >
+          <MdNotifications className="w-6 h-6 text-white" />
+          {notifications.length > 0 && (
+            <span className="notification-badge">{notifications.length}</span>
           )}
-        </div>
+        </button>
+      </header>
 
-        {error && (
-          <div className="bg-red-100/80 backdrop-blur-sm text-red-700 p-4 rounded-lg mb-8">
-            {error}
-          </div>
-        )}
-
-        {weather && (
-          <div className="space-y-6">
-            <WeatherCard data={weather} />
-            <WeatherStats data={weather} />
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">
-              Прогноз на 5 дней
-            </h2>
-            <div className="daily-forecast">
-              {forecast.map((day) => (
-                <WeatherCard key={day.dt} data={day} />
-              ))}
+      {showNotifications && notifications.length > 0 && (
+        <div className="notifications-panel animate-fade-in mb-6">
+          {notifications.map((notification, index) => (
+            <div
+              key={index}
+              className={`notification-item ${notification.type}`}
+            >
+              {notification.message}
             </div>
+          ))}
+        </div>
+      )}
+
+      <div className="search-section">
+        <form onSubmit={handleSubmit} className="search-bar">
+          <div className="search-input-container">
+            <input
+              type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="search-input"
+              placeholder="Введите название города..."
+              list="recent-searches"
+            />
+            <MdSearch className="search-icon" />
+            <datalist id="recent-searches">
+              {recentSearches.map((city) => (
+                <option key={city} value={city} />
+              ))}
+            </datalist>
+          </div>
+          <button
+            type="button"
+            onClick={getCurrentLocation}
+            className="button"
+            title="Определить местоположение"
+          >
+            <MdMyLocation className="w-5 h-5" />
+            <span className="hidden md:inline">Моё местоположение</span>
+          </button>
+          <button
+            type="submit"
+            className="button"
+            disabled={loading}
+          >
+            <MdSearch className="w-5 h-5" />
+            <span>{loading ? 'Загрузка...' : 'Найти'}</span>
+          </button>
+        </form>
+
+        {recentSearches.length > 0 && (
+          <div className="recent-searches mt-4">
+            <span className="text-gray-600">Недавние поиски:</span>
+            {recentSearches.map((city) => (
+              <button
+                key={city}
+                onClick={() => {
+                  setCity(city);
+                  fetchWeather(null, null, city);
+                }}
+                className="recent-search-item"
+              >
+                {city}
+              </button>
+            ))}
           </div>
         )}
       </div>
+
+      {error && (
+        <div className="error-message animate-fade-in">
+          {error}
+        </div>
+      )}
+
+      {weather && (
+        <div className="weather-content animate-fade-in">
+          <WeatherCard data={weather} />
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <WeatherStats data={weather} />
+            <AirQualityIndicator
+              pressure={weather.pressure}
+              humidity={weather.humidity}
+            />
+          </div>
+
+          <TemperatureChart data={[weather, ...forecast]} />
+          
+          <div className="forecast-section">
+            <h2 className="text-2xl font-semibold text-white mb-4">
+              Прогноз на 5 дней
+            </h2>
+            <div className="forecast-container">
+              {forecast.map((day, index) => {
+                const date = new Date(day.dt * 1000);
+                const formattedDate = new Intl.DateTimeFormat('ru-RU', {
+                  day: 'numeric',
+                  month: 'long'
+                }).format(date);
+                
+                return (
+                  <div key={index} className="forecast-card">
+                    <div className="forecast-date">
+                      <span className="forecast-date-weekday">
+                        {new Intl.DateTimeFormat('ru-RU', { weekday: 'short' }).format(date)}
+                      </span>
+                      <span className="forecast-date-full">{formattedDate}</span>
+                    </div>
+
+                    <div className="forecast-weather-icon">
+                      {getWeatherIcon(day.weather[0].id)}
+                    </div>
+
+                    <div className="forecast-description">
+                      {day.weather[0].description}
+                    </div>
+
+                    <div className="forecast-temps">
+                      <span className="forecast-temp-max">
+                        {Math.round(day.temp)}°
+                      </span>
+                      <span className="forecast-temp-min">
+                        {Math.round(day.temp_min)}°
+                      </span>
+                    </div>
+
+                    <div className="forecast-details">
+                      <div className="forecast-detail-item">
+                        <span className="forecast-detail-label">Влажность</span>
+                        <span className="forecast-detail-value">{day.humidity}%</span>
+                      </div>
+                      <div className="forecast-detail-item">
+                        <span className="forecast-detail-label">Ветер</span>
+                        <span className="forecast-detail-value">{Math.round(day.wind_speed)} м/с</span>
+                      </div>
+                      <div className="forecast-detail-item">
+                        <span className="forecast-detail-label">Вероятность</span>
+                        <span className="forecast-detail-value">
+                          {Math.round((day.pop || 0) * 100)}%
+                        </span>
+                      </div>
+                      <div className="forecast-detail-item">
+                        <span className="forecast-detail-label">Осадки</span>
+                        <span className="forecast-detail-value">
+                          {day.rain ? `${day.rain} мм` : '0 мм'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

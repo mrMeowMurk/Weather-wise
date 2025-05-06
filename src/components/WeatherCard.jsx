@@ -1,38 +1,70 @@
 import React from 'react';
-import { WiDaySunny, WiRain, WiCloudy, WiSnow, WiThunderstorm, WiFog } from 'react-icons/wi';
-
-const getWeatherIcon = (weatherCode) => {
-  if (weatherCode === 0 || weatherCode === 1) return <WiDaySunny />;
-  if (weatherCode >= 51 && weatherCode <= 67) return <WiRain />;
-  if (weatherCode >= 71 && weatherCode <= 77) return <WiSnow />;
-  if (weatherCode >= 80 && weatherCode <= 82) return <WiRain />;
-  if (weatherCode >= 85 && weatherCode <= 86) return <WiSnow />;
-  if (weatherCode >= 95) return <WiThunderstorm />;
-  if (weatherCode === 45 || weatherCode === 48) return <WiFog />;
-  return <WiCloudy />;
-};
+import { WiSunrise, WiSunset } from 'react-icons/wi';
 
 const WeatherCard = ({ data }) => {
-  const date = new Date(data.dt * 1000);
-  
+  const formatTime = (timestamp) => {
+    if (!timestamp) return '--:--';
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   return (
     <div className="weather-card">
-      <div className="flex items-center justify-between">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <h2 className="text-2xl font-bold">{Math.round(data.temp)}°C</h2>
-          <p className="text-gray-600">
-            {date.toLocaleDateString('ru-RU', { weekday: 'long' })}
-          </p>
+          <h2 className="text-3xl font-bold mb-2">Сейчас</h2>
+          <div className="flex items-center">
+            <div className="weather-icon mr-4">
+              {/* Здесь можно добавить иконку погоды */}
+            </div>
+            <div>
+              <p className="text-5xl font-bold">{Math.round(data.temp)}°</p>
+              <p className="text-xl text-gray-600">
+                {data.weather[0].description}
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="weather-icon">
-          {getWeatherIcon(data.weather[0].id)}
-        </div>
-      </div>
-      <div className="mt-4">
-        <p className="text-gray-700">{data.weather[0].description}</p>
-        <div className="mt-2 text-sm text-gray-600">
-          <p>Влажность: {data.humidity}%</p>
-          <p>Ветер: {Math.round(data.wind_speed)} м/с</p>
+        
+        <div className="flex flex-col justify-center">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <WiSunrise className="text-3xl text-yellow-500 mr-2" />
+              <div>
+                <p className="text-sm text-gray-600">Восход</p>
+                <p className="font-semibold">{formatTime(data.sunrise)}</p>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <WiSunset className="text-3xl text-orange-500 mr-2" />
+              <div>
+                <p className="text-sm text-gray-600">Закат</p>
+                <p className="font-semibold">{formatTime(data.sunset)}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-gray-600">Ощущается как</p>
+              <p className="font-semibold">{Math.round(data.apparent_temperature)}°</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Влажность</p>
+              <p className="font-semibold">{data.humidity}%</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Ветер</p>
+              <p className="font-semibold">{Math.round(data.wind_speed)} м/с</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Давление</p>
+              <p className="font-semibold">{Math.round(data.pressure)} гПа</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -21,8 +21,8 @@ const WeatherCard = ({ data }) => {
           {/* Левая секция с основной информацией */}
           <div className="space-y-6">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold text-gray-800">Сейчас</h2>
-              <p className="text-sm text-gray-600">{new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+              <h2 className="text-3xl font-bold text-white-800">Сейчас</h2>
+              <p className="text-sm text-white-600">{new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
             </div>
             
             <div className="flex items-start space-x-4">
@@ -34,12 +34,12 @@ const WeatherCard = ({ data }) => {
               </div>
               <div>
                 <div className="flex items-start">
-                  <span className="text-6xl font-bold text-gray-800 tracking-tighter">
+                  <span className="text-6xl font-bold text-white-800 tracking-tighter">
                     {Math.round(data.temp)}
                   </span>
-                  <span className="text-4xl font-bold text-gray-400 mt-1">°C</span>
+                  <span className="text-4xl font-bold text-white-400 mt-1">°C</span>
                 </div>
-                <p className="text-lg text-gray-600 mt-1 capitalize">
+                <p className="text-lg text-white-600 mt-1 capitalize">
                   {data.weather[0].description}
                 </p>
               </div>

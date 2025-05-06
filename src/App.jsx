@@ -329,7 +329,7 @@ function App() {
 
         {recentSearches.length > 0 && (
           <div className="recent-searches mt-4">
-            <span className="text-gray-600">Недавние поиски:</span>
+            <span className="text--600">Недавние поиски:</span>
             {recentSearches.map((city) => (
               <button
                 key={city}

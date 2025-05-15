@@ -77,7 +77,8 @@ weather-wise/
 - Напишите в Telegram: @MrMeowMurk
 - mrMeowMurk - [@mrMeowMurk](https://github.com/mrMeowMurk)
 
+---
 
 <div align="center">
-Сделано с ❤️ MeowMurk
-</div>
+  <sub>Сделано с ❤️ by MeowMurk</sub>
+</div> 
